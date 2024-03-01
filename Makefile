@@ -13,15 +13,16 @@ venv:
 
 venv/bin/activate: requirements.txt | venv
 	. ./venv/bin/activate && pip install -r requirements.txt
+	. ./venv/bin/activate && pip install -e .
 
 install: venv/bin/activate
 
 clean:
 	find . -type f -name "*.pyc" -delete
 	rm -rf __pycache__
-	rm -rf $(VENV)
+	rm -rf venv
 
-format: venv/bin/activate
+format: venv
 	. ./venv/bin/activate && black $(SRC)
 	. ./venv/bin/activate && pylint -d C0111 $(SRC)
 

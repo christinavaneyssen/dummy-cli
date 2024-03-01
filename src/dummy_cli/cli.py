@@ -1,6 +1,4 @@
-import click
+from dummy_cli.cli_root import cli
 
-
-@click.command(name="dummy", invoke_without_command=True)
-def cli():
-    pass
+if __name__ == "__main__":
+    cli()
