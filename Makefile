@@ -1,29 +1,22 @@
 .DEFAULT_GOAL := install
-FULL_PATH := $(shell pwd)
-SRC := ./src
-TESTS := ./tests
+.PHONY: install clean format
+SHELL := /bin/bash
+PYTHON=venv/bin/python
 
-define make_venv
-	test -d $(1) || python -mvenv ./$(1)
-	. ./venv/bin/activate && pip install --upgrade pip
-endef
 
 venv:
-	$(call make_venv,$@)
+	python3 -m venv venv
 
-venv/bin/activate: requirements.txt | venv
-	. ./venv/bin/activate && pip install -r requirements.txt
-	. ./venv/bin/activate && pip install -e .
-
-install: venv/bin/activate
+install: venv
+	$(PYTHON) -m pip install --upgrade pip
+	$(PYTHON) -m pip install -r requirements.txt
+	$(PYTHON) -m pip install -e .
 
 clean:
 	find . -type f -name "*.pyc" -delete
 	rm -rf __pycache__
 	rm -rf venv
 
-format: venv
-	. ./venv/bin/activate && black $(SRC)
-	. ./venv/bin/activate && pylint -d C0111 $(SRC)
-
-.PHONY: install clean format
+format: venv install
+	source venv/bin/activate && black src/
+	source venv/bin/activate && pylint -d C0111 src/
